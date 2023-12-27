@@ -152,7 +152,7 @@ pub struct Ip4Config2Protocol {
     /// that do not require an asynchronous configuration process, the result of
     /// the operation is immediately returned.
     pub set_data: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *mut Self,
         data_type: DataType,
         data_size: usize,
         data: *const c_void,
@@ -177,7 +177,7 @@ pub struct Ip4Config2Protocol {
     /// process is finished, the event will be signaled and a subsequent
     /// GetData() call will return the specified configuration data.
     pub get_data: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *const Self,
         data_type: DataType,
         data_size: *mut usize,
         data: *mut c_void,
@@ -192,14 +192,14 @@ pub struct Ip4Config2Protocol {
     /// caller is responsible for determining which type of configuration data
     /// causes the signaling of the event in such case.
     pub register_data_notify:
-        unsafe extern "efiapi" fn(this: &Self, data_type: DataType, event: Event) -> Status,
+        unsafe extern "efiapi" fn(this: *mut Self, data_type: DataType, event: Event) -> Status,
 
     /// Remove a previously registered event for the specified configuration data.
     ///
     /// This function removes a previously registered event for the specified
     /// configuration data.
     pub unregister_data_notify:
-        unsafe extern "efiapi" fn(this: &Self, data_type: DataType, event: Event) -> Status,
+        unsafe extern "efiapi" fn(this: *mut Self, data_type: DataType, event: Event) -> Status,
 }
 
 impl Ip4Config2Protocol {

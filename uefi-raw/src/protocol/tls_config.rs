@@ -25,7 +25,7 @@ pub struct TlsConfigProtocol {
     /// The SetData() function sets TLS configuration to non-volatile storage or
     /// volatile storage.
     pub set_data: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *mut Self,
         typ: DataType,
         data: *const c_void,
         size: usize,
@@ -33,7 +33,7 @@ pub struct TlsConfigProtocol {
 
     /// The GetData() function gets TLS configuration.
     pub get_data: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *const Self,
         typ: DataType,
         data: *mut c_void,
         size: *mut usize,

@@ -49,7 +49,7 @@ impl TlsConfig<'_> {
     fn set<T>(&mut self, data_type: DataType, data: T) -> Result {
         unsafe {
             (self.proto.set_data)(
-                &self.proto,
+                self.proto,
                 data_type,
                 &data as *const _ as *const c_void,
                 mem::size_of_val(&data),
@@ -62,7 +62,7 @@ impl TlsConfig<'_> {
         let size = mem::size_of_val(data);
         unsafe {
             (self.proto.set_data)(
-                &self.proto,
+                self.proto,
                 data_type,
                 data as *const _ as *const c_void,
                 size,
@@ -87,7 +87,7 @@ impl TlsConfig<'_> {
     ) -> Result<(), usize> {
         unsafe {
             (self.proto.get_data)(
-                &self.proto,
+                self.proto,
                 data_type,
                 data as *mut _ as *mut c_void,
                 data_size,

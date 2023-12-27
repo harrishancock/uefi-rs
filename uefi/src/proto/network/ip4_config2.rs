@@ -140,7 +140,7 @@ impl Ip4Config2<'_> {
     fn set<T>(&mut self, data_type: DataType, data: T) -> Result {
         unsafe {
             (self.proto.set_data)(
-                &self.proto,
+                self.proto,
                 data_type,
                 mem::size_of_val(&data),
                 &data as *const _ as *const c_void,
@@ -169,7 +169,7 @@ impl Ip4Config2<'_> {
     ) -> Result<(), usize> {
         unsafe {
             (self.proto.get_data)(
-                &self.proto,
+                self.proto,
                 data_type,
                 data_size,
                 data as *mut _ as *mut c_void,
@@ -186,14 +186,14 @@ impl Ip4Config2<'_> {
     #[allow(unused)]
     fn notify(&mut self, data_type: DataType, bt: &BootServices) -> Result<Event> {
         let event = unsafe { bt.create_event(EventType::empty(), Tpl::APPLICATION, None, None)? };
-        unsafe { (self.proto.register_data_notify)(&self.proto, data_type, event.as_ptr()) }
+        unsafe { (self.proto.register_data_notify)(self.proto, data_type, event.as_ptr()) }
             .to_result_with_val(|| event)
     }
 
     /// Remove a previously registered event for the specified configuration data.
     #[allow(unused)]
     fn stop_notify(&mut self, data_type: DataType, event: &Event) -> Result {
-        unsafe { (self.proto.unregister_data_notify)(&self.proto, data_type, event.as_ptr()) }
+        unsafe { (self.proto.unregister_data_notify)(self.proto, data_type, event.as_ptr()) }
             .to_result()
     }
 }

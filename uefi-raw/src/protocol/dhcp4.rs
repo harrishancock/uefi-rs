@@ -33,7 +33,7 @@ newtype_enum! {
     }
 }
 
-#[repr(C, packed(1))]
+#[repr(C, packed)]
 pub struct Packet {
     pub size: u32,
     pub length: u32,
@@ -61,7 +61,7 @@ pub struct Packet {
 /// Arrays of PacketOptions must be packed with zero padding between bytes,
 /// except data must always have at least one byte, even when length is 0.
 #[derive(Debug)]
-#[repr(C, packed(1))]
+#[repr(C, packed)]
 pub struct PacketOption<const N: usize> {
     pub op_code: u8,
     pub length: u8,
@@ -130,18 +130,18 @@ pub struct TransmitReceiveToken {
 
 #[repr(C)]
 pub struct Dhcp4Protocol {
-    pub get_mode_data: unsafe extern "efiapi" fn(this: &Self, mode_data: *mut ModeData) -> Status,
-    pub configure: unsafe extern "efiapi" fn(this: &Self, cfg_data: *const ConfigData) -> Status,
-    pub start: extern "efiapi" fn(this: &Self, completion_event: Event) -> Status,
+    pub get_mode_data: unsafe extern "efiapi" fn(this: *const Self, mode_data: *mut ModeData) -> Status,
+    pub configure: unsafe extern "efiapi" fn(this: *mut Self, cfg_data: *const ConfigData) -> Status,
+    pub start: unsafe extern "efiapi" fn(this: *mut Self, completion_event: Event) -> Status,
     pub renew_rebind: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *mut Self,
         rebind_request: bool,
         completion_event: Event,
     ) -> Status,
-    pub release: extern "efiapi" fn(this: &Self) -> Status,
-    pub stop: extern "efiapi" fn(this: &Self) -> Status,
+    pub release: unsafe extern "efiapi" fn(this: *mut Self) -> Status,
+    pub stop: unsafe extern "efiapi" fn(this: *mut Self) -> Status,
     pub build: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *mut Self,
         seed_packet: *mut Packet,
         delete_count: u32,
         delete_list: *mut u8,
@@ -150,9 +150,9 @@ pub struct Dhcp4Protocol {
         new_packet: *mut *mut Packet,
     ) -> Status,
     pub transmit_receive:
-        unsafe extern "efiapi" fn(this: &Self, token: *mut TransmitReceiveToken) -> Status,
+        unsafe extern "efiapi" fn(this: *mut Self, token: *mut TransmitReceiveToken) -> Status,
     pub parse: unsafe extern "efiapi" fn(
-        this: &Self,
+        this: *mut Self,
         packet: *mut Packet,
         option_count: *mut u32,
         packet_option_list: *mut PacketOption<1>,

@@ -35,7 +35,7 @@ impl Http<'_> {
     /// canceling all asynchronous tokens, and flush request and response
     /// buffers without informing the appropriate hosts.
     pub fn reset(&mut self) -> Result {
-        unsafe { (self.proto.configure)(&mut self.proto, ptr::null_mut()).to_result() }
+        unsafe { (self.proto.configure)(self.proto, ptr::null_mut()).to_result() }
     }
 
     /// Setup client using bound IPv4 address.
@@ -54,7 +54,7 @@ impl Http<'_> {
                 ipv4_node: &ipv4_node,
             },
         };
-        unsafe { (self.proto.configure)(&mut self.proto, &config).to_result() }
+        unsafe { (self.proto.configure)(self.proto, &config).to_result() }
     }
 
     /// Synchronously perform an HTTP request. To receive a response, [read]
@@ -117,7 +117,7 @@ impl Http<'_> {
 
         // Send request
         unsafe {
-            (self.proto.request)(&mut self.proto, &token as *const Token as *mut Token)
+            (self.proto.request)(self.proto, &token as *const Token as *mut Token)
                 .to_result_with_err(|_| "sending request token".to_owned())?;
         };
 
@@ -198,7 +198,7 @@ impl Http<'_> {
         // Wait for response
         unsafe {
             (self.proto.response)(
-                &mut self.proto,
+                self.proto,
                 &mut Token {
                     event: response_event.as_ptr(),
                     status: Status::SUCCESS,
@@ -281,7 +281,7 @@ impl Http<'_> {
     /// applications that are experiencing packet loss should try calling the Poll() function more
     /// often.
     fn poll(&mut self) -> Result {
-        unsafe { (self.proto.poll)(&mut self.proto).to_result() }
+        unsafe { (self.proto.poll)(self.proto).to_result() }
     }
 }
 

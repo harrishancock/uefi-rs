@@ -29,12 +29,12 @@ impl Dhcp4<'_> {
         let mut config: ConfigData = unsafe { mem::zeroed() };
         config.option_count = options.count();
         config.option_list = &mut options.as_ptr();
-        unsafe { (self.proto.configure)(&mut self.proto, &config).to_result() }
+        unsafe { (self.proto.configure)(self.proto, &config).to_result() }
     }
 
     /// Try completing a DHCPv4 Discover/Offer/Request/Acknowledge sequence.
     pub fn bind(&mut self) -> Result {
-        (self.proto.start)(&mut self.proto, Event::NULL).to_result()
+        unsafe { (self.proto.start)(self.proto, Event::NULL).to_result() }
     }
 
     /// Get the bound IP, returning 0.0.0.0 if no IP is currently bound.
@@ -46,7 +46,7 @@ impl Dhcp4<'_> {
     fn mode_data(&mut self) -> Result<ModeData> {
         let mut data: ModeData = unsafe { mem::zeroed() };
         unsafe {
-            (self.proto.get_mode_data)(&mut self.proto, &mut data)
+            (self.proto.get_mode_data)(self.proto, &mut data)
                 .to_result()
                 .map(|_| data)
         }

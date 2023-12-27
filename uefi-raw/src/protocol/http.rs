@@ -192,7 +192,7 @@ pub struct HttpProtocol {
     /// The GetModeData() function is used to read the current mode data
     /// (operational parameters) for this HTTP protocol instance.
     pub get_mode_data:
-        unsafe extern "efiapi" fn(this: &Self, config_data: *mut ConfigData) -> Status,
+        unsafe extern "efiapi" fn(this: *const Self, config_data: *mut ConfigData) -> Status,
 
     /// Initialize or brutally reset the operational parameters for this EFI
     /// HTTP instance.
@@ -209,7 +209,7 @@ pub struct HttpProtocol {
     ///
     /// No other EFI HTTP function can be executed by this instance until the
     /// Configure() function is executed and returns successfully.
-    pub configure: unsafe extern "efiapi" fn(this: &Self, config_data: *const ConfigData) -> Status,
+    pub configure: unsafe extern "efiapi" fn(this: *mut Self, config_data: *const ConfigData) -> Status,
 
     /// The Request() function queues an HTTP request to this HTTP instance,
     /// similar to Transmit() function in the EFI TCP driver. When the HTTP
@@ -234,7 +234,7 @@ pub struct HttpProtocol {
     /// is different from previous calls to Request(). This is consistent with
     /// RFC 2616 recommendation that HTTP clients should attempt to maintain an
     /// open TCP connection between client and host.
-    pub request: unsafe extern "efiapi" fn(this: &Self, token: *mut Token) -> Status,
+    pub request: unsafe extern "efiapi" fn(this: *mut Self, token: *mut Token) -> Status,
 
     /// Abort an asynchronous HTTP request or response token.
     ///
@@ -246,7 +246,7 @@ pub struct HttpProtocol {
     /// operation has completed, EFI_NOT_FOUND is returned. If Token is NULL,
     /// all asynchronous tokens issued by Request() or Response() will be
     /// aborted.
-    pub cancel: unsafe extern "efiapi" fn(this: &Self, token: *mut Token) -> Status,
+    pub cancel: unsafe extern "efiapi" fn(this: *mut Self, token: *mut Token) -> Status,
 
     /// The Response() function queues an HTTP response to this HTTP instance,
     /// similar to Receive() function in the EFI TCP driver. When the HTTP
@@ -279,7 +279,7 @@ pub struct HttpProtocol {
     /// EFI_ACCESS_DENIED. This is consistent with RFC 2616 recommendation that
     /// HTTP clients should attempt to maintain an open TCP connection between
     /// client and host.
-    pub response: unsafe extern "efiapi" fn(this: &Self, token: *mut Token) -> Status,
+    pub response: unsafe extern "efiapi" fn(this: *mut Self, token: *mut Token) -> Status,
 
     /// Polls for incoming data packets and processes outgoing data packets.
     ///
@@ -291,7 +291,7 @@ pub struct HttpProtocol {
     /// all data packets without missing incoming packets or dropping outgoing
     /// packets. Drivers and applications that are experiencing packet loss
     /// should try calling the Poll() function more often.
-    pub poll: unsafe extern "efiapi" fn(this: &Self) -> Status,
+    pub poll: unsafe extern "efiapi" fn(this: *mut Self) -> Status,
 }
 
 impl HttpProtocol {
