@@ -199,13 +199,13 @@ pub struct HttpProtocol {
     ///
     /// The Configure() function does the following:
     ///
-    ///     - When HttpConfigData is not NULL Initialize this EFI HTTP instance by
-    ///       configuring timeout, local address, port, etc.
+    /// - When HttpConfigData is not NULL Initialize this EFI HTTP instance by
+    ///   configuring timeout, local address, port, etc.
     ///
-    ///     - When HttpConfigData is NULL, reset this EFI HTTP instance by
-    ///       closing all active connections with remote hosts, canceling all
-    ///       asynchronous tokens, and flush request and response buffers
-    ///       without informing the appropriate hosts.
+    /// - When HttpConfigData is NULL, reset this EFI HTTP instance by
+    ///   closing all active connections with remote hosts, canceling all
+    ///   asynchronous tokens, and flush request and response buffers
+    ///   without informing the appropriate hosts.
     ///
     /// No other EFI HTTP function can be executed by this instance until the
     /// Configure() function is executed and returns successfully.
